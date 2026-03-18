@@ -1,6 +1,6 @@
 services:
   web:
-    image: ${DOCKER_IMAGE:-ghcr.io/chaibax/life-story-showcase:latest}
+    image: ${DOCKER_IMAGE:-ghcr.io/tiitan/life-story-marketing:latest}
     restart: unless-stopped
     networks:
       - default
