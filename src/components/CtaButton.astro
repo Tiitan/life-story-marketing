@@ -1,0 +1,20 @@
+---
+import UiIcon from './UiIcon.astro';
+
+interface Props {
+  href: string;
+  label: string;
+  primary?: boolean;
+  large?: boolean;
+  id?: string;
+  class?: string;
+}
+
+const { href, label, primary = false, large = false, id, class: className = '' } = Astro.props;
+const classes = ['btn', primary ? 'primary' : '', large ? 'btn--large' : '', className].filter(Boolean).join(' ');
+---
+
+<a id={id} class={classes} href={href}>
+  <span>{label}</span>
+  {primary && <UiIcon name="arrow-right" />}
+</a>

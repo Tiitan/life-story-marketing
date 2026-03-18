@@ -1,0 +1,56 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageKey, LandingPageContent } from '../content/types';
+import { imageManifest } from '../content/images';
+import CtaButton from './CtaButton.astro';
+
+interface Props {
+  content:
+    | LandingPageContent['hero']
+    | {
+        title: string;
+        description: string;
+        cta: { href: string; label: string; primary?: boolean };
+        info: string;
+        titleHtml?: string;
+        image?: ImageKey;
+        alt?: string;
+      };
+  id?: string;
+  centered?: boolean;
+}
+
+const { content, id = 'hero', centered = false } = Astro.props;
+const titleHtml = 'titleHtml' in content ? content.titleHtml : undefined;
+const plainTitle = 'title' in content ? content.title : '';
+---
+
+<section id={id} class:list={['section', 'section--hero', 'section--noPadding', centered ? 'section--center' : 'section--left', 'dark']}>
+  <div class:list={['ft', centered ? 'ft--center ft--noPdx' : 'ft--left']} style={centered ? '--pdx-pt:200;--pdx-pb:-100' : '--pdx-pt:100;--pdx-pb:-100'}>
+    <div class="ft__half">
+      <div class="ft__wrapper" style="max-width:690px">
+        <div class="ft__content">
+          {titleHtml ? (
+            <h1 class="hero__title color-1 weight-title-h font-title" set:html={titleHtml}></h1>
+          ) : (
+            <h1 class="hero__title color-1 weight-title-h font-title">{plainTitle}</h1>
+          )}
+          <p class="hero__subtitle weight-text">{content.description}</p>
+          <div class="ctas">
+            <CtaButton href={content.cta.href} label={content.cta.label} primary large />
+          </div>
+          <div class="hero__ctaInfo">
+            <p>{content.info}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {!centered && content.image && (
+      <div class="ft__half pdx pdxParent--img-transparent" style="--pdx-maxheight:2">
+        <div class="pdxItem pdxItem--img-transparent">
+          <Image src={imageManifest[content.image]} alt={content.alt ?? ''} />
+        </div>
+      </div>
+    )}
+  </div>
+</section>

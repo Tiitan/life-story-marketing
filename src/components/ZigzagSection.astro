@@ -1,0 +1,43 @@
+---
+import { Image } from 'astro:assets';
+import type { LandingPageContent } from '../content/types';
+import { imageManifest, videoManifest } from '../content/images';
+
+interface Props {
+  id: string;
+  content: LandingPageContent['weeklyFlow'];
+}
+
+const { id, content } = Astro.props;
+---
+
+<section id={id} class="section section--zigzag section--center dark" style="padding-bottom:60px;padding-top:60px;--pdx-min-height:0px;--wr-max:1440px">
+  <div class="wr">
+    <h2 class="color-1 weight-title-h font-title section__title center">{content.title}</h2>
+    <p class="weight-text section__subtitle center" style="margin-bottom:50px">{content.description}</p>
+    <div class="zigzag showNumbers">
+      {content.items.map((item) => (
+        <div class="zigzagItem">
+          <div class="zigzagItem__graphic">
+            {item.video ? (
+              <video class="media media--video" autoplay loop muted playsinline src={videoManifest[item.video]}></video>
+            ) : (
+              <Image src={imageManifest[item.image!]} alt={item.alt} />
+            )}
+          </div>
+          <div class="zigzagItem__content">
+            <span class="zigzagItem__number"></span>
+            {item.titleHtml ? (
+              <h3 class="zigzagItem__title color-1 weight-text-m" set:html={item.titleHtml}></h3>
+            ) : (
+              <h3 class="zigzagItem__title color-1 weight-text-m">{item.title}</h3>
+            )}
+            <div class="zigzagItem__text">
+              <p>{item.description}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

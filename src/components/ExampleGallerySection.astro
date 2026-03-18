@@ -1,0 +1,30 @@
+---
+import { Image } from 'astro:assets';
+import type { LandingPageContent } from '../content/types';
+import { imageManifest } from '../content/images';
+
+interface Props {
+  content: LandingPageContent['examples'];
+}
+
+const { content } = Astro.props;
+---
+
+<section id="examples" class="section section--titles section--center dark" style="padding-bottom:60px;padding-top:60px;--pdx-min-height:0px;--wr-max:1440px">
+  <div class="wr">
+    <h2 class="color-1 weight-title-h font-title section__title center">{content.title}</h2>
+    <p class="weight-text section__subtitle center" style="margin-bottom:0">{content.description}</p>
+  </div>
+</section>
+<section class="section section--media section--center dark" style="padding-bottom:60px;padding-top:60px;--pdx-min-height:0px;--wr-max:1440px">
+  <div class="wr examples-grid">
+    {content.items.map((item) => (
+      <div class="sectionBox example-box">
+        <div class="wr titleAlign--">
+          <div class="titleWrapper"></div>
+          <Image src={imageManifest[item.image]} alt={item.alt} class="media media--image" />
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

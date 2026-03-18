@@ -1,0 +1,99 @@
+---
+import { Image } from 'astro:assets';
+import type { FeatureItem, ImageKey } from '../content/types';
+import { imageManifest } from '../content/images';
+import UiIcon from './UiIcon.astro';
+
+interface Props {
+  id: string;
+  titleHtml: string;
+  description: string;
+  items: FeatureItem[];
+  image: ImageKey;
+  alt: string;
+  centered?: boolean;
+  checks?: string[];
+  iconStyle?: 'hexagon' | 'circle';
+}
+
+const {
+  id,
+  titleHtml,
+  description,
+  items,
+  image,
+  alt,
+  centered = false,
+  checks = [],
+  iconStyle = 'hexagon',
+} = Astro.props;
+---
+
+<section id={id} class:list={['section', 'section--feature', 'section--noPadding', centered ? 'section--center' : 'section--left', 'dark']}>
+  <div class:list={['ft', centered ? 'ft--center' : 'ft--left']} style="--pdx-pt:100;--pdx-pb:100">
+    <div class="ft__half">
+      <div class="ft__wrapper" style="max-width:690px">
+        <div class="ft__content">
+          <h2 class:list={['color-1', 'weight-title-h', 'font-title', 'section__title', centered ? 'center' : 'left']} set:html={titleHtml}></h2>
+          <p class:list={['weight-text', 'section__subtitle', centered ? 'center' : 'left']} style="margin-bottom:0">{description}</p>
+          <div class="ft__description">
+            {items.map((item) => (
+              <div class="ftPoint">
+                <div class:list={['iconWrapper', 'medium', iconStyle]} style="width:34px;height:34px">
+                  {iconStyle === 'hexagon' ? (
+                    <svg class="backdrop" width="29.9985" height="35" viewBox="0 0 24 27" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12.016 27a4.387 4.387 0 0 1-2.298-.642l-7.42-4.395A4.755 4.755 0 0 1 0 17.907V9.085c0-1.69.886-3.246 2.298-4.057L9.718.634a4.424 4.424 0 0 1 4.564 0l7.42 4.394A4.755 4.755 0 0 1 24 9.085v8.788c0 1.69-.886 3.245-2.298 4.057l-7.387 4.428c-.723.44-1.51.642-2.299.642z" fill="#e9ecef" fill-rule="nonzero"></path>
+                    </svg>
+                  ) : (
+                    <svg class="backdrop" width="34" height="34" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="40" cy="42" r="14" transform="translate(-26 -28)" fill="#e9ecef" fill-rule="nonzero"></circle>
+                    </svg>
+                  )}
+                  <UiIcon name={item.icon} class="icon" />
+                </div>
+                <div class="ftPoint__meta">
+                  <h3 class="ftPoint__title color-1 weight-text-m">{item.title}</h3>
+                  <div class="ftPoint__description">
+                    <p>{item.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {checks.length > 0 && (
+              <div class="ftChecks col-sec">
+                {checks.map((check) => (
+                  <div class="ftCheck">
+                    <UiIcon name="check" />
+                    {check}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class:list={['ft__half', 'pdx', centered ? 'pdxParent--browser' : 'pdxParent--img-solid']} style="--pdx-maxheight:2">
+      {centered ? (
+        <div class="pdxItem pdxItem--browser">
+          <svg viewBox="0 0 940 623" xmlns="http://www.w3.org/2000/svg" class="pdxBrowser">
+            <g fill="none" fill-rule="evenodd">
+              <rect fill="#FFF" width="940" height="623" rx="9"></rect>
+              <path d="M0 36h940V9a9 9 0 0 0-9-9H9a9 9 0 0 0-9 9v27z" fill="#DFE1E6"></path>
+              <circle fill="#FD6157" cx="18" cy="18" r="6"></circle>
+              <circle fill="#FDBD04" cx="38" cy="18" r="6"></circle>
+              <circle fill="#30CA2E" cx="58" cy="18" r="6"></circle>
+            </g>
+          </svg>
+          <div class="pdxContent">
+            <Image src={imageManifest[image]} alt={alt} />
+          </div>
+        </div>
+      ) : (
+        <div class="pdxItem pdxItem--img-solid" style="border-radius:15px;box-shadow:0 4px 10px 0 rgba(0,0,0,0.15)">
+          <Image src={imageManifest[image]} alt={alt} />
+        </div>
+      )}
+    </div>
+  </div>
+</section>

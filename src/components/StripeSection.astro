@@ -1,0 +1,19 @@
+---
+import { Image } from 'astro:assets';
+import { imageManifest } from '../content/images';
+
+interface Props {
+  topPadding?: string;
+  bottomPadding?: string;
+  id?: string;
+}
+
+const { topPadding = '0', bottomPadding = '42px', id = 'stripe' } = Astro.props;
+---
+
+<section id={id} class="section section--media section--center dark" style={`padding-bottom:${bottomPadding};padding-top:${topPadding};--pdx-min-height:0px;--wr-max:393px`}>
+  <div class="wr titleAlign--">
+    <div class="titleWrapper"></div>
+    <Image src={imageManifest.stripePayment} alt="Paiement sécurisé Stripe et PayPal" class="media media--image" />
+  </div>
+</section>

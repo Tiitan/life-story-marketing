@@ -1,0 +1,56 @@
+---
+import { Image } from 'astro:assets';
+import type { GalleryCard } from '../content/types';
+import { imageManifest } from '../content/images';
+
+interface Props {
+  id: string;
+  title?: string;
+  titleHtml?: string;
+  description: string;
+  items: GalleryCard[];
+  background?: string;
+  waveTop?: boolean;
+}
+
+const { id, title, titleHtml, description, items, background, waveTop = false } = Astro.props;
+---
+
+<section id={id} class="section section--gallery section--center dark" style={`padding-bottom:60px;padding-top:60px;--pdx-min-height:0px;--wr-max:1440px;${background ? `background-color:${background};` : ''}`}>
+  {waveTop && (
+    <div class="divider divider--wave">
+      <svg viewBox="0 0 1695 57" preserveAspectRatio="none">
+        <path d="M0 23c135.4 19 289.6 28.5 462.5 28.5C721.9 51.5 936.7 1 1212.2 1 1395.8.9 1556.7 8.3 1695 23v34H0V23z" fill="#fff" fill-rule="evenodd"></path>
+      </svg>
+    </div>
+  )}
+  <div class="wr titleAlign--">
+    <div class="titleWrapper">
+      {titleHtml ? (
+        <h2 class="color-1 weight-title-h font-title section__title center" set:html={titleHtml}></h2>
+      ) : (
+        <h2 class="color-1 weight-title-h font-title section__title center">{title}</h2>
+      )}
+      <p class="weight-text section__subtitle center" style="margin-bottom:50px">{description}</p>
+    </div>
+    <div class="gallery gallery-cards">
+      {items.map((item) => (
+        <div class="galleryItem gallery-card">
+          <div>
+            <div class="media gallery-card__media">
+              <Image src={imageManifest[item.image]} alt={item.alt} />
+            </div>
+            <div class="gallery__meta">
+              <h3 class="color-1 weight-text">
+                <strong>{item.title}</strong>
+              </h3>
+              <div class="gallery__description">
+                <p>{item.description}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

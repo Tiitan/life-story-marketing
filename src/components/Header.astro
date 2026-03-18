@@ -1,0 +1,87 @@
+---
+import { Image } from 'astro:assets';
+import type { LandingPageContent } from '../content/types';
+import { imageManifest } from '../content/images';
+import CtaButton from './CtaButton.astro';
+import UiIcon from './UiIcon.astro';
+
+interface Props {
+  content: LandingPageContent['nav'];
+  homeHref: string;
+}
+
+const { content, homeHref } = Astro.props;
+---
+
+<header id="header" class="section header dark section--vkx0t873ze2vd995">
+  <div class="wr color-1 header__inner" style="margin-top:10px;margin-bottom:10px;--wr-max:1440px">
+    <div id="headerNav">
+      <div class="logoWrapper" id="headerLogo">
+        <a href={homeHref} class="header__logoImg">
+          <Image src={imageManifest.logo} alt="Life Story AI" width={29} />
+        </a>
+        <a href={homeHref} class="header__logo" style="font-weight:700;font-size:26px">Life Story AI ✨</a>
+      </div>
+      <div class="spacer"></div>
+      <div class="headerNav__links">
+        {content.links.map((link) => (
+          <a href={link.href}>{link.label}</a>
+        ))}
+      </div>
+      <div class="languagePicker headerLP js-language-picker">
+        <ul class="options" style="background-color:rgb(255, 255, 255)">
+          <li class="arrow-up" style="border-bottom-color:rgb(255, 255, 255)"></li>
+          <li class="option">
+            <a style="color:#222" href={content.alternateLanguage.href}>
+              {content.alternateLanguage.label}
+            </a>
+          </li>
+        </ul>
+        <button class="activeLanguage link js-language-trigger" type="button">
+          <span>{content.currentLanguage}</span>
+          <UiIcon name="chevron-down" />
+        </button>
+      </div>
+      <div class="header__navCtas">
+        {content.authCtas.map((cta) => (
+          <CtaButton href={cta.href} label={cta.label} />
+        ))}
+        <CtaButton href={content.buyCta.href} label={content.buyCta.label} primary />
+      </div>
+    </div>
+    <button id="headerMenuButton" class="burger" type="button" aria-expanded="false">
+      Menu
+    </button>
+  </div>
+  <div class="headerMenu">
+    <div id="headerDrawerBackdrop" class="headerMenu__backdrop"></div>
+    <div class="headerMenu__wrapper" style="background-color:#ffffff">
+      <ul class="headerMenu__links">
+        {content.links.map((link) => (
+          <li>
+            <a href={link.href} class="drawerLink">
+              {link.label}
+            </a>
+          </li>
+        ))}
+        {content.authCtas.map((cta) => (
+          <li>
+            <div class="drawerButtonChildren">
+              <a href={cta.href}>
+                <div class="headerButtonChild__meta">{cta.label}</div>
+              </a>
+            </div>
+          </li>
+        ))}
+        <li>
+          <div class="drawerButtonChildren">
+            <a href={content.buyCta.href}>
+              <div class="headerButtonChild__meta">{content.buyCta.label}</div>
+              <UiIcon name="arrow-right" />
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>

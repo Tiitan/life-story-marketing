@@ -1,0 +1,62 @@
+---
+import type { LandingPageContent } from '../content/types';
+import SocialIcon from './SocialIcon.astro';
+import UiIcon from './UiIcon.astro';
+
+interface Props {
+  content: LandingPageContent['footer'];
+}
+
+const { content } = Astro.props;
+---
+
+<footer id="footer" class="section section--footer section--center dark" style="background-color:#fff;padding-bottom:15px;padding-top:15px;--pdx-min-height:0px;--wr-max:1440px">
+  <div class="wr">
+    <div class="footer">
+      <div class="footer__primary">
+        <span>
+          {content.lines[0]}<br />
+          {content.lines[1]}<br />
+          ✉️ <a href={`mailto:${content.lines[2]}`}>{content.lines[2]}</a><br />
+          {content.lines[3]}<br />
+          {content.lines[4]}
+        </span>
+        <ul class="footer__social">
+          {content.socialLinks.map((link) => (
+            <li>
+              <a href={link.href} target="_blank" rel="noreferer noopener" class="color-2">
+                <SocialIcon platform={link.platform} />
+              </a>
+            </li>
+          ))}
+        </ul>
+        <nav class="footer__linkRow">
+          <div class="languagePicker footerLP js-language-picker">
+            <ul class="options" style="background-color:rgb(255, 255, 255)">
+              <li class="arrow-down" style="border-top-color:rgb(255, 255, 255)"></li>
+              <li class="option">
+                <a style="color:#222" href={content.alternateLanguage.href}>
+                  {content.alternateLanguage.label}
+                </a>
+              </li>
+            </ul>
+            <button class="activeLanguage link js-language-trigger" type="button">
+              <UiIcon name="globe" />
+              <span>{content.currentLanguage}</span>
+            </button>
+          </div>
+        </nav>
+      </div>
+      <div class="footer__linkGroups">
+        {content.legalLinks.map((group) => (
+          <ul class="footer__linkGroup">
+            <li class="weight-text">{group.title ?? ''}</li>
+            {group.links.map((link) => (
+              <a href={link.href}>{link.label}</a>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </div>
+  </div>
+</footer>

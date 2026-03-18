@@ -1,0 +1,24 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  description: string;
+  waveTop?: boolean;
+}
+
+const { id, title, description, waveTop = false } = Astro.props;
+---
+
+<section id={id} class="section section--titles section--center dark" style="background-color:#fafafa;padding-bottom:120px;padding-top:120px;--pdx-min-height:0px;--wr-max:1440px">
+  {waveTop && (
+    <div class="divider divider--wave">
+      <svg viewBox="0 0 1695 57" preserveAspectRatio="none">
+        <path d="M0 23c135.4 19 289.6 28.5 462.5 28.5C721.9 51.5 936.7 1 1212.2 1 1395.8.9 1556.7 8.3 1695 23v34H0V23z" fill="#fff" fill-rule="evenodd"></path>
+      </svg>
+    </div>
+  )}
+  <div class="wr">
+    <h2 class="color-1 weight-title-h font-title section__title center">{title}</h2>
+    <p class="weight-text section__subtitle center" style="margin-bottom:0">{description}</p>
+  </div>
+</section>

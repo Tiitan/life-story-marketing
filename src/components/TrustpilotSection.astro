@@ -1,0 +1,17 @@
+---
+import { publicImageManifest } from '../content/images';
+
+interface Props {
+  narrow?: boolean;
+  id?: string;
+}
+
+const { narrow = false, id = 'trustpilot' } = Astro.props;
+---
+
+<section id={id} class:list={['section', 'section--media', narrow ? 'section--left' : 'section--center', 'dark']} style={`padding-bottom:${narrow ? '120px' : '60px'};padding-top:${narrow ? '0' : '60px'};--pdx-min-height:0px;--wr-max:${narrow ? '300px' : '300px'}`}>
+  <div class="wr titleAlign--top">
+    <div class="titleWrapper"></div>
+    <img src={publicImageManifest.trustpilotStars} class="media media--image" style="display:block" alt="Trustpilot rating" />
+  </div>
+</section>

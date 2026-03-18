@@ -1,0 +1,82 @@
+---
+import type { LandingPageContent } from '../content/types';
+import CtaButton from './CtaButton.astro';
+import UiIcon from './UiIcon.astro';
+
+interface Props {
+  content: LandingPageContent['pricing'];
+}
+
+const { content } = Astro.props;
+---
+
+<section id="new-pricing" class="section section--pricing section--center dark" style="padding-bottom:36px;padding-top:60px;min-height:100vh;--pdx-min-height:0px;--wr-max:1440px">
+  <div class="wr">
+    <h2 class="color-1 weight-title-h font-title section__title center">{content.title}</h2>
+    <p class="weight-text section__subtitle center" style="margin-bottom:50px">{content.description}</p>
+    <div>
+      <div class="pricingTableWrapper">
+        <table id="pricingTable_tfjobqln0xd" class="pricingTable active-a" style="--pricing-border-color:rgba(123, 123, 123, 0.2)">
+          <tbody>
+            <tr>
+              <th></th>
+              {content.plans.map((plan) => (
+                <th class="color-1 weight-text-m">
+                  <h2>{plan.name}</h2>
+                </th>
+              ))}
+            </tr>
+            <tr class="description">
+              <th></th>
+              {content.plans.map((plan) => (
+                <th class="weight-text">{plan.description}</th>
+              ))}
+            </tr>
+            <tr class="price color-1">
+              <td></td>
+              {content.plans.map((plan) => (
+                <td>
+                  <span class="a">
+                    <h3>{plan.price}</h3>
+                  </span>
+                </td>
+              ))}
+            </tr>
+            <tr class="interval">
+              <td></td>
+              {content.plans.map(() => (
+                <td>
+                  <span class="a"></span>
+                </td>
+              ))}
+            </tr>
+            {content.rows.map((row) => (
+              <tr>
+                <td>
+                  {row.label}
+                  {row.tooltip && (
+                    <span class="tooltip tooltip--right">
+                      <UiIcon name="info" />
+                      <span>{row.tooltip}</span>
+                    </span>
+                  )}
+                </td>
+                {row.values.map((value) => (
+                  <td set:html={value}></td>
+                ))}
+              </tr>
+            ))}
+            <tr class="pricingTableCtas">
+              <td></td>
+              {content.plans.map((plan) => (
+                <td>
+                  <CtaButton href={plan.cta.href} label={plan.cta.label} primary={!!plan.cta.primary} />
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

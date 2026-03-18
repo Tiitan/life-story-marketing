@@ -1,0 +1,36 @@
+---
+import type { LandingPageContent } from '../content/types';
+
+interface Props {
+  content: LandingPageContent['testimonials'];
+}
+
+const { content } = Astro.props;
+---
+
+<section class="section section--grid section--center dark" style="padding-bottom:60px;padding-top:60px;--pdx-min-height:0px;--wr-max:1440px">
+  <div class="wr titleAlign--" style="--image-size:1">
+    <div class="titleWrapper">
+      <h2 class="color-1 weight-title-h font-title section__title center">{content.title}</h2>
+      <p class="weight-text section__subtitle center" style="margin-bottom:50px">{content.description}</p>
+    </div>
+    <div class="testimonials--horizontal image--">
+      {content.items.map((item) => (
+        <div class="testimonial">
+          <div class="rating">
+            <div class="starRating" style={`--rating:${item.rating.startsWith('4.5') ? '4.5' : '5'};--color:#F6BA10`}></div>
+            <div class="numericRating">{item.rating}</div>
+          </div>
+          <div class="testimonial__quote color-1">
+            <p>{item.quote}</p>
+          </div>
+          {item.href ? (
+            <a href={item.href} class="testimonial__about weight-text-m">{item.author}</a>
+          ) : (
+            <span class="testimonial__about weight-text-m">{item.author}</span>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

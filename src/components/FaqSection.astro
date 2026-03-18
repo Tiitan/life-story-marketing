@@ -1,0 +1,34 @@
+---
+import type { LandingPageContent } from '../content/types';
+
+interface Props {
+  content: LandingPageContent['faq'];
+}
+
+const { content } = Astro.props;
+---
+
+<section id="faq" class="section section--faq section--center dark" style="background-color:#fafafa;padding-bottom:60px;padding-top:60px;--pdx-min-height:0px;--wr-max:1440px">
+  <div class="divider divider--curve divider--front">
+    <svg viewBox="0 0 1695 72" preserveAspectRatio="none">
+      <path d="M0 0c282.5 45 565 67.5 847.5 67.5S1412.5 45 1695 0v72H0V0z" fill="#fff" fill-rule="evenodd"></path>
+    </svg>
+  </div>
+  <div class="wr titleAlign--">
+    <div class="titleWrapper">
+      <h2 class="color-1 weight-title-h font-title section__title center" style="margin-bottom:50px">{content.title}</h2>
+    </div>
+    <div class="faq expandable">
+      {content.items.map((item) => (
+        <div class="faqItem closed">
+          <button class="color weight-text-h faqItem__question link js-faq-trigger" type="button">
+            {item.question}
+          </button>
+          <div class="faqItem__answer">
+            <p>{item.answer}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

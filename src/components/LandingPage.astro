@@ -1,0 +1,75 @@
+---
+import type { LandingPageContent } from '../content/types';
+import { localePath } from '../lib/i18n';
+import Header from './Header.astro';
+import HeroSection from './HeroSection.astro';
+import TrustpilotSection from './TrustpilotSection.astro';
+import TestimonialsSection from './TestimonialsSection.astro';
+import GalleryCardsSection from './GalleryCardsSection.astro';
+import FeatureSplitSection from './FeatureSplitSection.astro';
+import ZigzagSection from './ZigzagSection.astro';
+import PricingSection from './PricingSection.astro';
+import StripeSection from './StripeSection.astro';
+import TitleBandSection from './TitleBandSection.astro';
+import ExampleGallerySection from './ExampleGallerySection.astro';
+import FaqSection from './FaqSection.astro';
+import Footer from './Footer.astro';
+
+interface Props {
+  content: LandingPageContent;
+}
+
+const { content } = Astro.props;
+---
+
+<Header content={content.nav} homeHref={localePath(content.locale)} />
+<main>
+  <HeroSection content={content.hero} />
+  <TrustpilotSection narrow />
+  <TestimonialsSection content={content.testimonials} />
+  <GalleryCardsSection
+    id="ways-to-use"
+    titleHtml={content.roles.titleHtml}
+    description={content.roles.description}
+    items={content.roles.items}
+    background="#fafafa"
+    waveTop
+  />
+  <FeatureSplitSection
+    id="feature"
+    titleHtml={content.assistantFeatures.titleHtml}
+    description={content.assistantFeatures.description}
+    items={content.assistantFeatures.items}
+    checks={content.assistantFeatures.checks}
+    image={content.assistantFeatures.image}
+    alt={content.assistantFeatures.alt}
+    centered
+    iconStyle="hexagon"
+  />
+  <GalleryCardsSection
+    id="gallery-types"
+    title={content.bookTypes.title}
+    description={content.bookTypes.description}
+    items={content.bookTypes.items}
+  />
+  <ZigzagSection id="zigzag" content={content.weeklyFlow} />
+  <FeatureSplitSection
+    id="feature-customization"
+    titleHtml={content.customization.titleHtml}
+    description={content.customization.description}
+    items={content.customization.items}
+    image={content.customization.image}
+    alt={content.customization.alt}
+    iconStyle="circle"
+  />
+  <PricingSection content={content.pricing} />
+  <StripeSection id="stripe-top" />
+  <TitleBandSection id="guarantee" title={content.guarantee.title} description={content.guarantee.description} waveTop />
+  <ExampleGallerySection content={content.examples} />
+  <TitleBandSection id="privacy" title={content.privacy.title} description={content.privacy.description} waveTop />
+  <HeroSection content={content.finalCta} id="final-cta" centered />
+  <TrustpilotSection id="trustpilot-bottom" />
+  <FaqSection content={content.faq} />
+  <StripeSection id="stripe-bottom" topPadding="48px" />
+</main>
+<Footer content={content.footer} />
