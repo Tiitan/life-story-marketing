@@ -14,6 +14,12 @@ interface Props {
 const { locale, title, description } = Astro.props;
 const canonical = absoluteSiteUrl(localePath(locale));
 const ogImage = absoluteSiteUrl(imageManifest.ogCover.src);
+const gtmScriptSrc = withSitePath('/scripts/gtm.js');
+const posthogScriptSrc = withSitePath('/scripts/posthog.js');
+const trackingLinksScriptSrc = withSitePath('/scripts/tracking-links.js');
+const languagePickerScriptSrc = withSitePath('/scripts/language-picker.js');
+const headerDrawerScriptSrc = withSitePath('/scripts/header-drawer.js');
+const faqScriptSrc = withSitePath('/scripts/faq.js');
 ---
 
 <!doctype html>
@@ -38,17 +44,7 @@ const ogImage = absoluteSiteUrl(imageManifest.ogCover.src);
     <link rel="alternate" hreflang="fr" href={absoluteSiteUrl(localePath('fr'))} />
     <link rel="alternate" hreflang="x-default" href={absoluteSiteUrl(localePath('en'))} />
     <link href="https://fonts.googleapis.com/css?family=Rubik:700|Montserrat:600,400,500|Montserrat:400&display=fallback" rel="stylesheet" />
-    <script is:inline data-cs-category="performance">
-      !(function (e, t, a, n) {
-        e[n] = e[n] || [];
-        e[n].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-        var g = t.getElementsByTagName(a)[0],
-          m = t.createElement(a);
-        m.async = true;
-        m.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-5BKH9WK';
-        g.parentNode.insertBefore(m, g);
-      })(window, document, 'script', 'dataLayer');
-    </script>
+    <script is:inline data-cs-category="performance" src={gtmScriptSrc}></script>
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
@@ -60,131 +56,13 @@ const ogImage = absoluteSiteUrl(imageManifest.ogCover.src);
         ratingCount: '12',
       },
     })}></script>
-    <script is:inline>
-      !(function (o, i) {
-        if (i.__SV) return;
-        (window.posthog = i)._i = [];
-        i.init = function (e, t, s) {
-          var p = o.createElement('script');
-          p.type = 'text/javascript';
-          p.crossOrigin = 'anonymous';
-          p.async = true;
-          p.src = t.api_host.replace('.i.posthog.com', '-assets.i.posthog.com') + '/static/array.js';
-          var c = o.getElementsByTagName('script')[0];
-          c.parentNode.insertBefore(p, c);
-          var r = s ? (i[s] = []) : i;
-          var methods = 'capture identify alias people.set people.set_once register register_once unregister opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing reset isFeatureEnabled onFeatureFlags'.split(' ');
-          methods.forEach(function (method) {
-            var target = r;
-            var key = method;
-            if (method.indexOf('.') > -1) {
-              var parts = method.split('.');
-              target = r[parts[0]] = r[parts[0]] || [];
-              key = parts[1];
-            }
-            target[key] = function () {
-              target.push([key].concat(Array.prototype.slice.call(arguments, 0)));
-            };
-          });
-          i._i.push([e, t, s]);
-        };
-        i.__SV = 1;
-      })(document, window.posthog || []);
-      window.posthog.init('phc_hTwlJvwNssfcpIWYFMgWqzoGgM4FEB3CTn30psywFmH', {
-        api_host: 'https://eu.i.posthog.com',
-        defaults: '2025-05-24',
-        person_profiles: 'identified_only',
-      });
-    </script>
+    <script is:inline src={posthogScriptSrc}></script>
   </head>
   <body>
     <slot />
-    <script is:inline>
-      (function () {
-        const params = new URLSearchParams(window.location.search);
-        if (!params.has('utm_source')) {
-          let utmSource = 'Direct';
-          if (document.referrer) {
-            try {
-              utmSource = new URL(document.referrer).hostname;
-            } catch {
-            }
-          } else if (params.has('ref')) {
-            utmSource = params.get('ref') || utmSource;
-          }
-          params.set('utm_source', encodeURIComponent(utmSource));
-          const newUrl = `${window.location.pathname}?${params.toString()}${window.location.hash}`;
-          window.history.replaceState({}, document.title, newUrl);
-        }
-
-        const propagatedParams = ['gclid', 'ttclid', 'fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
-        const values = {};
-        propagatedParams.forEach((key) => {
-          const value = params.get(key);
-          if (value) values[key] = value;
-        });
-        if (Object.keys(values).length) {
-          document.querySelectorAll('a[href]').forEach((link) => {
-            const href = link.getAttribute('href');
-            if (!href || href.startsWith('#')) return;
-            try {
-              const url = new URL(href, window.location.origin);
-              if (url.hostname !== 'app.life-story.ai') return;
-              Object.entries(values).forEach(([key, value]) => url.searchParams.set(key, value));
-              link.setAttribute('href', url.origin === window.location.origin ? `${url.pathname}${url.search}${url.hash}` : url.toString());
-            } catch {
-            }
-          });
-        }
-
-        document.querySelectorAll('.js-language-picker').forEach((picker) => {
-          const trigger = picker.querySelector('.js-language-trigger');
-          trigger?.addEventListener('click', (event) => {
-            event.stopPropagation();
-            picker.classList.toggle('open');
-          });
-          picker.addEventListener('click', (event) => event.stopPropagation());
-        });
-
-        document.addEventListener('click', () => {
-          document.querySelectorAll('.js-language-picker.open').forEach((picker) => picker.classList.remove('open'));
-        });
-
-        const header = document.getElementById('header');
-        const menuButton = document.getElementById('headerMenuButton');
-        const menuBackdrop = document.getElementById('headerDrawerBackdrop');
-        const menuWrapper = document.querySelector('#header .headerMenu__wrapper');
-        const syncDrawer = () => {
-          if (!header) return;
-          if (window.innerWidth < 1140) {
-            header.classList.add('header--withDrawer');
-          } else {
-            header.classList.remove('header--withDrawer');
-            header.classList.remove('header--drawerOpen');
-            menuButton?.setAttribute('aria-expanded', 'false');
-          }
-        };
-        const toggleDrawer = () => {
-          if (!header) return;
-          const isOpen = header.classList.toggle('header--drawerOpen');
-          menuButton?.setAttribute('aria-expanded', String(isOpen));
-        };
-        menuButton?.addEventListener('click', toggleDrawer);
-        menuBackdrop?.addEventListener('click', toggleDrawer);
-        menuWrapper?.addEventListener('click', (event) => {
-          if (event.target instanceof Element && event.target.closest('a')) {
-            toggleDrawer();
-          }
-        });
-        window.addEventListener('resize', syncDrawer);
-        syncDrawer();
-
-        document.querySelectorAll('.js-faq-trigger').forEach((button) => {
-          button.addEventListener('click', () => {
-            button.parentElement?.classList.toggle('closed');
-          });
-        });
-      })();
-    </script>
+    <script is:inline src={trackingLinksScriptSrc}></script>
+    <script is:inline src={languagePickerScriptSrc}></script>
+    <script is:inline src={headerDrawerScriptSrc}></script>
+    <script is:inline src={faqScriptSrc}></script>
   </body>
 </html>
