@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import type { LandingPageContent } from '../content/types';
 import { imageManifest } from '../content/images';
+import { withSitePath } from '../lib/i18n';
 import CtaButton from './CtaButton.astro';
 import UiIcon from './UiIcon.astro';
 
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const { content, homeHref } = Astro.props;
+const alternateLanguageHref = withSitePath(content.alternateLanguage.href);
 ---
 
 <header id="header" class="section header dark section--vkx0t873ze2vd995">
@@ -32,7 +34,7 @@ const { content, homeHref } = Astro.props;
         <ul class="options" style="background-color:rgb(255, 255, 255)">
           <li class="arrow-up" style="border-bottom-color:rgb(255, 255, 255)"></li>
           <li class="option">
-            <a style="color:#222" href={content.alternateLanguage.href}>
+            <a style="color:#222" href={alternateLanguageHref}>
               {content.alternateLanguage.label}
             </a>
           </li>

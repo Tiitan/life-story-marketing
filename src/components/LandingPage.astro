@@ -1,6 +1,6 @@
 ---
 import type { LandingPageContent } from '../content/types';
-import { localePath } from '../lib/i18n';
+import { localePath, withSitePath } from '../lib/i18n';
 import Header from './Header.astro';
 import HeroSection from './HeroSection.astro';
 import TrustpilotSection from './TrustpilotSection.astro';
@@ -22,7 +22,7 @@ interface Props {
 const { content } = Astro.props;
 ---
 
-<Header content={content.nav} homeHref={localePath(content.locale)} />
+<Header content={content.nav} homeHref={withSitePath(localePath(content.locale))} />
 <main>
   <HeroSection content={content.hero} />
   <TrustpilotSection narrow />

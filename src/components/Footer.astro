@@ -1,5 +1,6 @@
 ---
 import type { LandingPageContent } from '../content/types';
+import { withSitePath } from '../lib/i18n';
 import SocialIcon from './SocialIcon.astro';
 import UiIcon from './UiIcon.astro';
 
@@ -8,6 +9,7 @@ interface Props {
 }
 
 const { content } = Astro.props;
+const alternateLanguageHref = withSitePath(content.alternateLanguage.href);
 ---
 
 <footer id="footer" class="section section--footer section--center dark" style="background-color:#fff;padding-bottom:15px;padding-top:15px;--pdx-min-height:0px;--wr-max:1440px">
@@ -35,7 +37,7 @@ const { content } = Astro.props;
             <ul class="options" style="background-color:rgb(255, 255, 255)">
               <li class="arrow-down" style="border-top-color:rgb(255, 255, 255)"></li>
               <li class="option">
-                <a style="color:#222" href={content.alternateLanguage.href}>
+                <a style="color:#222" href={alternateLanguageHref}>
                   {content.alternateLanguage.label}
                 </a>
               </li>
