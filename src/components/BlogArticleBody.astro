@@ -1,0 +1,15 @@
+---
+interface Props {
+  center?: boolean;
+}
+
+const { center = false } = Astro.props;
+---
+
+<section class:list={['section', center ? 'section--center' : 'section--left', 'dark', 'blog-article__bodySection']} style="background-color:#fff;padding-bottom:24px;padding-top:0;--pdx-min-height:0px;--wr-max:800px">
+  <div class="wr">
+    <div class="post__content">
+      <slot />
+    </div>
+  </div>
+</section>

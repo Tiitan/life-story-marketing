@@ -1,10 +1,11 @@
 import type { LandingPageContent, Locale } from './types';
 import { enContent } from './site.en';
 import { frContent } from './site.fr';
+import { normalizeCopy } from '../lib/text';
 
 export const landingPageContent: Record<Locale, LandingPageContent> = {
-  en: enContent,
-  fr: frContent,
+  en: normalizeCopy(enContent),
+  fr: normalizeCopy(frContent),
 };
 
 export function getLandingPageContent(locale: Locale) {

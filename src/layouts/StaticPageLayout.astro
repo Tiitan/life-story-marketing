@@ -1,0 +1,54 @@
+---
+import type { Locale } from '../content/types';
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getStaticPageChrome } from '../lib/site-chrome';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  seoTitle: string;
+  seoDescription: string;
+  path: string;
+  alternatePath: string;
+  heroTitle: string;
+  heroSubtitle?: string;
+}
+
+const { locale, title, description, seoTitle, seoDescription, path, alternatePath, heroTitle, heroSubtitle } = Astro.props;
+const chrome = getStaticPageChrome(locale, alternatePath);
+const alternateLinks =
+  locale === 'en'
+    ? [
+        { hreflang: 'en', href: path },
+        { hreflang: 'fr', href: alternatePath },
+        { hreflang: 'x-default', href: path },
+      ]
+    : [
+        { hreflang: 'en', href: alternatePath },
+        { hreflang: 'fr', href: path },
+        { hreflang: 'x-default', href: alternatePath },
+      ];
+---
+
+<BaseLayout
+  locale={locale}
+  title={seoTitle}
+  description={seoDescription || description}
+  canonicalPath={path}
+  alternateLinks={alternateLinks}
+>
+  <Header content={chrome.nav} locale={locale} homeHref={chrome.homeHref} anchorHrefPrefix={chrome.homeHref} />
+  <main class="static-page__main">
+    <section class="section section--titles section--center dark static-page__hero">
+      <div class="wr">
+        <h1 class="color-1 weight-title-h font-title section__title">{heroTitle}</h1>
+        {heroSubtitle && <p class="weight-text section__subtitle static-page__heroSubtitle">{heroSubtitle}</p>}
+      </div>
+    </section>
+    <slot />
+  </main>
+  <Footer content={chrome.footer} locale={locale} anchorHrefPrefix={chrome.homeHref} />
+</BaseLayout>

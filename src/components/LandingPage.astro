@@ -22,7 +22,7 @@ interface Props {
 const { content } = Astro.props;
 ---
 
-<Header content={content.nav} homeHref={withSitePath(localePath(content.locale))} />
+<Header content={content.nav} locale={content.locale} homeHref={withSitePath(localePath(content.locale))} />
 <main>
   <HeroSection content={content.hero} />
   <TrustpilotSection narrow />
@@ -72,4 +72,4 @@ const { content } = Astro.props;
   <FaqSection content={content.faq} />
   <StripeSection id="stripe-bottom" topPadding="48px" />
 </main>
-<Footer content={content.footer} />
+<Footer content={content.footer} locale={content.locale} />

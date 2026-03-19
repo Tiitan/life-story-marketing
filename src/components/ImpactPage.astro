@@ -1,0 +1,86 @@
+---
+import { Image } from 'astro:assets';
+import { imageManifest } from '../content/images';
+import type { ImpactPageContent } from '../content/types';
+import StaticPageLayout from '../layouts/StaticPageLayout.astro';
+import { normalizeHtmlInternalLinks, withConfiguredSiteHref } from '../lib/site-links.js';
+
+interface Props {
+  content: ImpactPageContent;
+}
+
+const { content } = Astro.props;
+---
+
+<StaticPageLayout
+  locale={content.locale}
+  title={content.title}
+  description={content.description}
+  seoTitle={content.seoTitle}
+  seoDescription={content.seoDescription}
+  path={content.path}
+  alternatePath={content.alternatePath}
+  heroTitle={content.heroTitle}
+>
+  <section
+    id="zigzag"
+    class="section section--zigzag section--center dark"
+    style="padding-bottom:60px;padding-top:60px;--pdx-min-height:0px;--wr-max:1440px"
+  >
+    <div class="wr">
+      <p class="weight-text section__subtitle center impact-page__intro" style="margin-bottom:50px" set:html={content.introHtml}></p>
+      <div class="zigzag showNumbers">
+        {content.benefits.map((benefit) => (
+          <div class="zigzagItem">
+            <div class="zigzagItem__graphic">
+              <Image src={imageManifest[benefit.image]} alt={benefit.alt} />
+            </div>
+            <div class="zigzagItem__content">
+              <span class="zigzagItem__number"></span>
+              <h3 class="zigzagItem__title color-1 weight-text-m">{benefit.title}</h3>
+              <div class="zigzagItem__text">
+                <p>{benefit.description}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section
+    id="content"
+    class="section section--titles section--center dark"
+    style="padding-bottom:60px;padding-top:60px;--pdx-min-height:0px;--wr-max:1440px"
+  >
+    <div class="wr titleAlign--">
+      <div class="titleWrapper"></div>
+      <div
+        class="color textBody mkd textBody-- textBody--dark impact-page__body"
+        set:html={normalizeHtmlInternalLinks(content.locale, content.bodyHtml)}
+      ></div>
+    </div>
+  </section>
+
+  <section
+    id="cta"
+    class="section section--cta section--center dark"
+    style="padding-bottom:60px;padding-top:60px;--pdx-min-height:0px;--wr-max:1440px"
+  >
+    <div class="wr">
+      <div class="sectionBox impact-page__ctaBox">
+        <div class="wr">
+          <div class="cta__titles">
+            <h2 class="color-1 weight-title-h font-title section__title center">{content.cta.title}</h2>
+            <p class="weight-text section__subtitle center" style="margin-bottom:50px">{content.cta.subtitle}</p>
+          </div>
+          <div class="ctas">
+            <a class="btn btn--large" href={withConfiguredSiteHref(content.cta.href)}>
+              {content.cta.label}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</StaticPageLayout>

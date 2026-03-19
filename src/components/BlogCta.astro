@@ -1,0 +1,27 @@
+---
+import type { BlogUiContent } from '../content/blog.ui';
+import { withSitePath } from '../lib/i18n';
+import CtaButton from './CtaButton.astro';
+
+interface Props {
+  ui: BlogUiContent;
+}
+
+const { ui } = Astro.props;
+---
+
+<section class="section section--cta section--center dark" style="background-color:#fff;padding-bottom:60px;padding-top:36px;--pdx-min-height:0px;--wr-max:1440px">
+  <div class="wr">
+    <div class="sectionBox blog-cta__box">
+      <div class="wr">
+        <div class="cta__titles">
+          <h2 class="color-1 weight-title-h font-title section__title center">{ui.ctaTitle}</h2>
+          <p class="weight-text section__subtitle center">{ui.ctaDescription}</p>
+        </div>
+        <div class="ctas">
+          <CtaButton href={withSitePath(ui.ctaHref)} label={ui.ctaLabel} primary large />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

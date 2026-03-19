@@ -12,6 +12,10 @@ import exampleFamilyStory from '../assets/landing/example-family-story.webp';
 import exampleGift from '../assets/landing/example-gift.webp';
 import favicon from '../assets/landing/favicon.png';
 import heroFamilyBook from '../assets/landing/hero-family-book.jpg';
+import impactCulturalHeritage from '../assets/impact/benefit-cultural-heritage.png';
+import impactIntergenerationalUnderstanding from '../assets/impact/benefit-intergenerational-understanding.png';
+import impactPsychologicalWellBeing from '../assets/impact/benefit-psychological-well-being.png';
+import impactSocialConnection from '../assets/impact/benefit-social-connection.png';
 import lisaBrowser from '../assets/landing/lisa-browser.png';
 import logo from '../assets/landing/logo.png';
 import ogCover from '../assets/landing/og-cover.jpg';
@@ -28,6 +32,10 @@ export const imageManifest = {
   logo,
   favicon,
   ogCover,
+  impactPsychologicalWellBeing,
+  impactIntergenerationalUnderstanding,
+  impactSocialConnection,
+  impactCulturalHeritage,
   heroFamilyBook,
   roleMainAuthor,
   roleCoauthor,

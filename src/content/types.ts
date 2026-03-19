@@ -4,6 +4,10 @@ export type ImageKey =
   | 'logo'
   | 'favicon'
   | 'ogCover'
+  | 'impactPsychologicalWellBeing'
+  | 'impactIntergenerationalUnderstanding'
+  | 'impactSocialConnection'
+  | 'impactCulturalHeritage'
   | 'heroFamilyBook'
   | 'roleMainAuthor'
   | 'roleCoauthor'
@@ -95,6 +99,11 @@ export interface PricingRow {
 export interface FooterLinkGroup {
   title?: string;
   links: LinkItem[];
+}
+
+export interface AlternateLink {
+  hreflang: string;
+  href: string;
 }
 
 export interface FooterContent {
@@ -193,3 +202,68 @@ export interface LandingPageContent {
     alternateLanguage: LinkItem;
   };
 }
+
+export interface StaticContentSection {
+  title?: string;
+  subtitle?: string;
+  html: string;
+}
+
+export interface StaticPageBase {
+  locale: Locale;
+  path: string;
+  alternatePath: string;
+  title: string;
+  description: string;
+  seoTitle: string;
+  seoDescription: string;
+  heroTitle: string;
+  heroSubtitle?: string;
+}
+
+export interface RichStaticPageContent extends StaticPageBase {
+  kind: 'rich';
+  sections: StaticContentSection[];
+}
+
+export interface FaqPageContent extends StaticPageBase {
+  kind: 'faq';
+  sections?: StaticContentSection[];
+  faq: LandingPageContent['faq'];
+}
+
+export interface TeamMemberContent {
+  name: string;
+  role: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  links?: LinkItem[];
+}
+
+export interface TeamPageContent extends StaticPageBase {
+  kind: 'team';
+  members: TeamMemberContent[];
+  sections?: StaticContentSection[];
+}
+
+export interface ImpactBenefitItem {
+  title: string;
+  description: string;
+  image: ImageKey;
+  alt: string;
+}
+
+export interface ImpactPageContent extends StaticPageBase {
+  introHtml: string;
+  benefits: ImpactBenefitItem[];
+  bodyHtml: string;
+  cta: {
+    title: string;
+    subtitle: string;
+    label: string;
+    href: string;
+  };
+}
+
+export type StaticPageContent = RichStaticPageContent | FaqPageContent | TeamPageContent;

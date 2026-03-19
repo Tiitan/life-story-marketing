@@ -1,0 +1,54 @@
+---
+import type { StaticPageContent } from '../content/types';
+import { normalizeHtmlInternalLinks } from '../lib/site-links.js';
+import StaticPageLayout from '../layouts/StaticPageLayout.astro';
+import FaqSection from './FaqSection.astro';
+import TeamMemberCard from './TeamMemberCard.astro';
+
+interface Props {
+  content: StaticPageContent;
+}
+
+const { content } = Astro.props;
+const contentSections = content.sections ?? [];
+---
+
+<StaticPageLayout
+  locale={content.locale}
+  title={content.title}
+  description={content.description}
+  seoTitle={content.seoTitle}
+  seoDescription={content.seoDescription}
+  path={content.path}
+  alternatePath={content.alternatePath}
+  heroTitle={content.heroTitle}
+  heroSubtitle={content.heroSubtitle}
+>
+  {content.kind === 'team' ? (
+    <section class="section section--team section--center dark static-page__section">
+      <div class="wr" style="--image-size:1.35">
+        <div class="team team--center image-- team-section__grid">
+          {content.members.map((member) => (
+            <TeamMemberCard member={member} />
+          ))}
+        </div>
+      </div>
+    </section>
+  ) : null}
+
+  {contentSections.map((section) => (
+    <section class="section section--titles section--center dark static-page__section">
+      <div class="wr">
+        {section.title || section.subtitle ? (
+          <div class="titleWrapper">
+            {section.title && <h2 class="color-1 weight-title-h font-title section__title center">{section.title}</h2>}
+            {section.subtitle && <p class="weight-text section__subtitle center">{section.subtitle}</p>}
+          </div>
+        ) : null}
+        <div class="static-page__prose" set:html={normalizeHtmlInternalLinks(content.locale, section.html)}></div>
+      </div>
+    </section>
+  ))}
+
+  {content.kind === 'faq' ? <FaqSection content={content.faq} /> : null}
+</StaticPageLayout>

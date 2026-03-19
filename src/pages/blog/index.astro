@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogIndex from '../../components/BlogIndex.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { getBlogUiContent } from '../../content/blog.ui';
+import { getLandingPageContent } from '../../content/site';
+import { alternateLocale, localePath, withSitePath } from '../../lib/i18n';
+import { getBlogIndexPath, getBlogPostsByLocale } from '../../lib/blog';
+
+const locale = 'en';
+const landingContent = getLandingPageContent(locale);
+const posts = await getBlogPostsByLocale(locale);
+const ui = getBlogUiContent(locale);
+const alternatePath = getBlogIndexPath(alternateLocale(locale));
+const nav = {
+  ...landingContent.nav,
+  alternateLanguage: {
+    ...landingContent.nav.alternateLanguage,
+    href: alternatePath,
+  },
+};
+const footer = {
+  ...landingContent.footer,
+  alternateLanguage: {
+    ...landingContent.footer.alternateLanguage,
+    href: alternatePath,
+  },
+};
+const homeHref = withSitePath(localePath(locale));
+---
+
+<BaseLayout
+  locale={locale}
+  title={ui.indexTitle}
+  description={ui.indexDescription}
+  canonicalPath={getBlogIndexPath(locale)}
+  alternateLinks={[
+    { hreflang: 'en', href: getBlogIndexPath('en') },
+    { hreflang: 'fr', href: getBlogIndexPath('fr') },
+    { hreflang: 'x-default', href: getBlogIndexPath('en') },
+  ]}
+  ogType="website"
+>
+  <Header content={nav} locale={locale} homeHref={homeHref} anchorHrefPrefix={homeHref} />
+  <main>
+    <BlogIndex posts={posts} ui={ui} />
+  </main>
+  <Footer content={footer} locale={locale} anchorHrefPrefix={homeHref} />
+</BaseLayout>

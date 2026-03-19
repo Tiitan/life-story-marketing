@@ -1,0 +1,32 @@
+---
+import { withSitePath } from '../lib/i18n';
+import type { TeamMemberContent } from '../content/types';
+
+interface Props {
+  member: TeamMemberContent;
+}
+
+const { member } = Astro.props;
+---
+
+<article class="team__member">
+  <img src={member.image} class="member__avatar" alt={member.imageAlt} loading="lazy" />
+  <h3 class="member__name color-1 weight-text-m">
+    <p>{member.name}</p>
+  </h3>
+  <h4 class="member__role weight-text">
+    <p>{member.role}</p>
+  </h4>
+  {member.links?.length ? (
+    <div class="member__socials member__links">
+      {member.links.map((link) => (
+        <a href={withSitePath(link.href)} target="_blank" rel="noreferrer noopener">
+          {link.label}
+        </a>
+      ))}
+    </div>
+  ) : null}
+  <div class="member__description">
+    <p>{member.description}</p>
+  </div>
+</article>

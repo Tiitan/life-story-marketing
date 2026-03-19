@@ -1,0 +1,34 @@
+---
+import { Image } from 'astro:assets';
+import type { BlogUiContent } from '../content/blog.ui';
+import { formatBlogDate, getBlogIndexPath, type BlogPostEntry } from '../lib/blog';
+import { withSitePath } from '../lib/i18n';
+import UiIcon from './UiIcon.astro';
+
+interface Props {
+  post: BlogPostEntry;
+  ui: BlogUiContent;
+}
+
+const { post, ui } = Astro.props;
+const backHref = withSitePath(getBlogIndexPath(post.data.locale));
+---
+
+<section class="section section--left dark blog-article__section" style="background-color:#fff;padding-bottom:32px;padding-top:24px;--pdx-min-height:0px;--wr-max:850px">
+  <div class="wr blog-article__back">
+    <a href={backHref} class="blog-backLink">
+      <UiIcon name="arrow-right" />
+      <span>{ui.backToBlogLabel}</span>
+    </a>
+  </div>
+  <div class="wr blog-article__metaWrap" style="--wr-max:800px">
+    <h1 class="post__title weight-title-h font-title color-1">{post.data.title}</h1>
+    <div class="post__meta">
+      {ui.publishedByLabel} {post.data.author} {ui.publishedOnLabel}{' '}
+      <time datetime={post.data.publishDate.toISOString()}>{formatBlogDate(post.data.locale, post.data.publishDate)}</time>
+    </div>
+  </div>
+  <div class="wr">
+    <Image src={post.data.cover} alt={post.data.coverAlt} class="post__coverImage oversize" />
+  </div>
+</section>

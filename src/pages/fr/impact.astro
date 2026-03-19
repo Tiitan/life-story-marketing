@@ -1,0 +1,8 @@
+---
+import ImpactPage from '../../components/ImpactPage.astro';
+import { getImpactPageContent } from '../../content/impact';
+
+const content = getImpactPageContent('fr');
+---
+
+<ImpactPage content={content} />

@@ -1,6 +1,6 @@
 ---
 import { imageManifest } from '../content/images';
-import type { Locale } from '../content/types';
+import type { AlternateLink, Locale } from '../content/types';
 import { absoluteSiteUrl, localePath, withSitePath } from '../lib/i18n';
 import '../styles/umso.css';
 import '../styles/site.css';
@@ -9,17 +9,45 @@ interface Props {
   locale: Locale;
   title: string;
   description: string;
+  canonicalPath?: string;
+  alternateLinks?: AlternateLink[];
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
-const { locale, title, description } = Astro.props;
-const canonical = absoluteSiteUrl(localePath(locale));
-const ogImage = absoluteSiteUrl(imageManifest.ogCover.src);
+const { locale, title, description, canonicalPath, alternateLinks, ogImage, ogType = 'website', structuredData } = Astro.props;
+const canonical = absoluteSiteUrl(canonicalPath ?? localePath(locale));
+const resolvedOgImage = absoluteSiteUrl(ogImage ?? imageManifest.ogCover.src);
 const gtmScriptSrc = withSitePath('/scripts/gtm.js');
 const posthogScriptSrc = withSitePath('/scripts/posthog.js');
 const trackingLinksScriptSrc = withSitePath('/scripts/tracking-links.js');
 const languagePickerScriptSrc = withSitePath('/scripts/language-picker.js');
 const headerDrawerScriptSrc = withSitePath('/scripts/header-drawer.js');
 const faqScriptSrc = withSitePath('/scripts/faq.js');
+const resolvedAlternateLinks =
+  alternateLinks?.map((link) => ({
+    ...link,
+    href: absoluteSiteUrl(link.href),
+  })) ?? [
+    { hreflang: 'en', href: absoluteSiteUrl(localePath('en')) },
+    { hreflang: 'fr', href: absoluteSiteUrl(localePath('fr')) },
+    { hreflang: 'x-default', href: absoluteSiteUrl(localePath('en')) },
+  ];
+const structuredDataItems = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Life Story AI',
+    applicationCategory: 'MultimediaApplication',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.4',
+      ratingCount: '12',
+    },
+  },
+  ...(structuredData ? (Array.isArray(structuredData) ? structuredData : [structuredData]) : []),
+];
 ---
 
 <!doctype html>
@@ -31,31 +59,25 @@ const faqScriptSrc = withSitePath('/scripts/faq.js');
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={resolvedOgImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image" content={resolvedOgImage} />
     <link rel="icon" href={withSitePath(imageManifest.favicon.src)} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="en" href={absoluteSiteUrl(localePath('en'))} />
-    <link rel="alternate" hreflang="fr" href={absoluteSiteUrl(localePath('fr'))} />
-    <link rel="alternate" hreflang="x-default" href={absoluteSiteUrl(localePath('en'))} />
+    {resolvedAlternateLinks.map((link) => (
+      <link rel="alternate" hreflang={link.hreflang} href={link.href} />
+    ))}
     <link href="https://fonts.googleapis.com/css?family=Rubik:700|Montserrat:600,400,500|Montserrat:400&display=fallback" rel="stylesheet" />
     <script is:inline data-cs-category="performance" src={gtmScriptSrc}></script>
-    <script type="application/ld+json" set:html={JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'WebApplication',
-      name: 'Life Story AI',
-      applicationCategory: 'MultimediaApplication',
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: '4.4',
-        ratingCount: '12',
-      },
-    })}></script>
+    {structuredDataItems.map((item) => <script type="application/ld+json" set:html={JSON.stringify(item)}></script>)}
     <script is:inline src={posthogScriptSrc}></script>
   </head>
   <body>

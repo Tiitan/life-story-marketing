@@ -1,0 +1,17 @@
+---
+import StaticPage from '../../components/StaticPage.astro';
+import { getStaticPageContent, staticPageKeys } from '../../content/static-pages';
+
+export function getStaticPaths() {
+  return staticPageKeys.map((page) => ({
+    params: { page },
+    props: {
+      content: getStaticPageContent('fr', page),
+    },
+  }));
+}
+
+const { content } = Astro.props;
+---
+
+<StaticPage content={content} />

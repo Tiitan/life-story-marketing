@@ -1,0 +1,29 @@
+---
+import type { BlogUiContent } from '../content/blog.ui';
+import type { BlogPostEntry } from '../lib/blog';
+import BlogPostCard from './BlogPostCard.astro';
+
+interface Props {
+  posts: BlogPostEntry[];
+  ui: BlogUiContent;
+}
+
+const { posts, ui } = Astro.props;
+---
+
+<section class="section section--left dark blog-index__section" style="background-color:#fff;padding-bottom:18px;padding-top:24px;--pdx-min-height:0px;--wr-max:800px">
+  <div class="wr">
+    <div class="blogHeader">
+      <h1 class="color-1 weight-title-h font-title">{ui.indexTitle}</h1>
+      <p>{ui.indexDescription}</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section--left dark blog-index__section" style="background-color:#fff;padding-bottom:40px;padding-top:0;--pdx-min-height:0px;--wr-max:800px">
+  <div class="wr">
+    {posts.map((post) => (
+      <BlogPostCard post={post} ui={ui} />
+    ))}
+  </div>
+</section>

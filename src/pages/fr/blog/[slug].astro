@@ -1,0 +1,98 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogArticleBody from '../../../components/BlogArticleBody.astro';
+import BlogArticleHeader from '../../../components/BlogArticleHeader.astro';
+import BlogCta from '../../../components/BlogCta.astro';
+import Footer from '../../../components/Footer.astro';
+import Header from '../../../components/Header.astro';
+import { getBlogUiContent } from '../../../content/blog.ui';
+import { getLandingPageContent } from '../../../content/site';
+import { alternateLocale, absoluteSiteUrl, localePath, withSitePath } from '../../../lib/i18n';
+import { findTranslatedBlogPost, getBlogIndexPath, getBlogPostPath, type BlogPostEntry } from '../../../lib/blog';
+
+interface Props {
+  post: BlogPostEntry;
+  translatedPost: BlogPostEntry | null;
+}
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+  const frenchPosts = allPosts.filter((post) => post.data.locale === 'fr');
+
+  return frenchPosts.map((post) => ({
+    params: { slug: post.data.routeSlug },
+    props: {
+      post,
+      translatedPost: findTranslatedBlogPost(post, allPosts),
+    },
+  }));
+}
+
+const { post, translatedPost } = Astro.props;
+const { Content } = await render(post);
+const locale = 'fr';
+const ui = getBlogUiContent(locale);
+const landingContent = getLandingPageContent(locale);
+const alternatePath = translatedPost ? getBlogPostPath(translatedPost.data.locale, translatedPost.data.routeSlug) : getBlogIndexPath(alternateLocale(locale));
+const nav = {
+  ...landingContent.nav,
+  alternateLanguage: {
+    ...landingContent.nav.alternateLanguage,
+    href: alternatePath,
+  },
+};
+const footer = {
+  ...landingContent.footer,
+  alternateLanguage: {
+    ...landingContent.footer.alternateLanguage,
+    href: alternatePath,
+  },
+};
+const canonicalPath = getBlogPostPath(locale, post.data.routeSlug);
+const homeHref = withSitePath(localePath(locale));
+const alternateLinks = [
+  ...(translatedPost ? [{ hreflang: 'en', href: getBlogPostPath('en', translatedPost.data.routeSlug) }] : []),
+  { hreflang: 'fr', href: canonicalPath },
+  { hreflang: 'x-default', href: translatedPost ? getBlogPostPath('en', translatedPost.data.routeSlug) : canonicalPath },
+];
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  image: absoluteSiteUrl(post.data.cover.src),
+  datePublished: post.data.publishDate.toISOString(),
+  author: {
+    '@type': 'Person',
+    name: post.data.author,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Life Story AI',
+  },
+  mainEntityOfPage: absoluteSiteUrl(canonicalPath),
+  inLanguage: locale,
+};
+---
+
+<BaseLayout
+  locale={locale}
+  title={post.data.title}
+  description={post.data.description}
+  canonicalPath={canonicalPath}
+  alternateLinks={alternateLinks}
+  ogImage={post.data.cover.src}
+  ogType="article"
+  structuredData={structuredData}
+>
+  <Header content={nav} locale={locale} homeHref={homeHref} anchorHrefPrefix={homeHref} />
+  <main>
+    <BlogArticleHeader post={post} ui={ui} />
+    <BlogArticleBody>
+      <Content />
+    </BlogArticleBody>
+    <BlogCta ui={ui} />
+  </main>
+  <Footer content={footer} locale={locale} anchorHrefPrefix={homeHref} />
+</BaseLayout>

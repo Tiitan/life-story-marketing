@@ -1,18 +1,25 @@
 ---
 import { Image } from 'astro:assets';
-import type { LandingPageContent } from '../content/types';
+import type { LandingPageContent, Locale } from '../content/types';
 import { imageManifest } from '../content/images';
 import { withSitePath } from '../lib/i18n';
+import { normalizeSiteHref, withConfiguredSiteHref } from '../lib/site-links.js';
 import CtaButton from './CtaButton.astro';
 import UiIcon from './UiIcon.astro';
 
 interface Props {
   content: LandingPageContent['nav'];
+  locale: Locale;
   homeHref: string;
+  anchorHrefPrefix?: string;
 }
 
-const { content, homeHref } = Astro.props;
-const alternateLanguageHref = withSitePath(content.alternateLanguage.href);
+const { content, locale, homeHref, anchorHrefPrefix = '' } = Astro.props;
+const alternateLanguageHref = withConfiguredSiteHref(content.alternateLanguage.href);
+
+function resolveHref(href: string) {
+  return normalizeSiteHref(locale, href, { anchorHrefPrefix });
+}
 ---
 
 <header id="header" class="section header dark section--vkx0t873ze2vd995">
@@ -27,7 +34,7 @@ const alternateLanguageHref = withSitePath(content.alternateLanguage.href);
       <div class="spacer"></div>
       <div class="headerNav__links">
         {content.links.map((link) => (
-          <a href={link.href}>{link.label}</a>
+          <a href={resolveHref(link.href)}>{link.label}</a>
         ))}
       </div>
       <div class="languagePicker headerLP js-language-picker">
@@ -46,9 +53,9 @@ const alternateLanguageHref = withSitePath(content.alternateLanguage.href);
       </div>
       <div class="header__navCtas">
         {content.authCtas.map((cta) => (
-          <CtaButton href={cta.href} label={cta.label} />
+          <CtaButton href={withSitePath(cta.href)} label={cta.label} />
         ))}
-        <CtaButton href={content.buyCta.href} label={content.buyCta.label} primary />
+        <CtaButton href={withSitePath(content.buyCta.href)} label={content.buyCta.label} primary />
       </div>
     </div>
     <button id="headerMenuButton" class="burger" type="button" aria-expanded="false">
@@ -61,7 +68,7 @@ const alternateLanguageHref = withSitePath(content.alternateLanguage.href);
       <ul class="headerMenu__links">
         {content.links.map((link) => (
           <li>
-            <a href={link.href} class="drawerLink">
+            <a href={resolveHref(link.href)} class="drawerLink">
               {link.label}
             </a>
           </li>
@@ -69,7 +76,7 @@ const alternateLanguageHref = withSitePath(content.alternateLanguage.href);
         {content.authCtas.map((cta) => (
           <li>
             <div class="drawerButtonChildren">
-              <a href={cta.href}>
+              <a href={withSitePath(cta.href)}>
                 <div class="headerButtonChild__meta">{cta.label}</div>
               </a>
             </div>
@@ -77,7 +84,7 @@ const alternateLanguageHref = withSitePath(content.alternateLanguage.href);
         ))}
         <li>
           <div class="drawerButtonChildren">
-            <a href={content.buyCta.href}>
+            <a href={withSitePath(content.buyCta.href)}>
               <div class="headerButtonChild__meta">{content.buyCta.label}</div>
               <UiIcon name="arrow-right" />
             </a>

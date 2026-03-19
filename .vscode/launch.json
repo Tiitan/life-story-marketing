@@ -2,10 +2,22 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "command": "./node_modules/.bin/astro dev",
+      "command": "npm run dev",
       "name": "Development server",
       "request": "launch",
-      "type": "node-terminal"
+      "type": "node-terminal",
+      "env": {
+        "SITE_URL": "http://localhost:4321/"
+      }
+    },
+    {
+      "command": "npm run build",
+      "name": "GitHub Pages build",
+      "request": "launch",
+      "type": "node-terminal",
+      "env": {
+        "SITE_URL": "https://tiitan.github.io/life-story-marketing/"
+      }
     }
   ]
 }

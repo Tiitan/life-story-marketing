@@ -1,0 +1,34 @@
+---
+import { Image } from 'astro:assets';
+import type { BlogUiContent } from '../content/blog.ui';
+import { formatBlogDate, getBlogPostPath, type BlogPostEntry } from '../lib/blog';
+import { withSitePath } from '../lib/i18n';
+import UiIcon from './UiIcon.astro';
+
+interface Props {
+  post: BlogPostEntry;
+  ui: BlogUiContent;
+}
+
+const { post, ui } = Astro.props;
+const href = withSitePath(getBlogPostPath(post.data.locale, post.data.routeSlug));
+---
+
+<article class="postItem" role="article">
+  <a href={href} class="postItem__titleLink">
+    <h2 class="weight-title-h font-title color-1">{post.data.title}</h2>
+  </a>
+  <div class="postItem__meta">
+    {ui.publishedByLabel} {post.data.author} {ui.publishedOnLabel}{' '}
+    <time datetime={post.data.publishDate.toISOString()}>{formatBlogDate(post.data.locale, post.data.publishDate)}</time>
+  </div>
+  <a href={href}>
+    <Image src={post.data.cover} alt={post.data.coverAlt} class="postItem__coverImage oversize" />
+  </a>
+  <div class="postItem__content">
+    {post.data.excerpt}{' '}
+    <a href={href}>
+      {ui.readMoreLabel} <UiIcon name="arrow-right" />
+    </a>
+  </div>
+</article>
